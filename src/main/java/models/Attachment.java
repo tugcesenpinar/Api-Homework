@@ -5,7 +5,11 @@ import io.restassured.internal.RequestSpecificationImpl;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-public class Attachments {
+public class Attachment {
+
+
+    public Attachment() {
+    }
 
     public String addAttachment(RequestSpecification httpRequest, String url, Response response){
         String html = "Url= " + url + "\n\n" +

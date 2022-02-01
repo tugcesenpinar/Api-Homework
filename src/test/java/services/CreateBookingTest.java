@@ -1,11 +1,11 @@
 package services;
 
 import com.google.gson.Gson;
-import io.qameta.allure.model.Attachment;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import models.Attachment;
 import models.BookingDates;
 import models.CreateBooking;
 import org.apache.http.HttpStatus;
@@ -21,7 +21,7 @@ import static io.restassured.RestAssured.given;
 
 public class CreateBookingTest {
     private String cookie = "";
-    Attachment attachment = new Attachment();
+   Attachment attachment = new Attachment();
 
     @BeforeTest
     public void Token() {
@@ -62,7 +62,7 @@ public class CreateBookingTest {
             Date checkin = formatter.parse("2022-01-01");
             Date checkout = formatter.parse("2022-05-01"); */
 
-        RestAssured.baseURI = "https://restful-booker.herokuapp.com";
+        baseURI = "https://restful-booker.herokuapp.com";
         BookingDates bookingdates = new BookingDates("2022-01-02","2022-05-02");
 
         CreateBooking createRequest = new CreateBooking("tugce", "senpinar", 500, true, "breakfast",bookingdates );
@@ -74,7 +74,7 @@ public class CreateBookingTest {
                 .body(createData).
                 when()
                 .post("/booking");
-        attachment.addAttachment(request, baseURI, response);
+        String result = attachment.addAttachment(request, baseURI, response);
         response.then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)

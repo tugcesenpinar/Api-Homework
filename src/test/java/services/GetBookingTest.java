@@ -11,13 +11,13 @@ public class GetBookingTest {
     @BeforeTest
     public void postCreateBooking() {
         String createData = "{\n" +
-                "    \"firstname\" : \"Tugce\",\n" +
-                "    \"lastname\" : \"Senpinar\",\n" +
-                "    \"totalprice\" : 300,\n" +
+                "    \"firstname\" : \"Jim\",\n" +
+                "    \"lastname\" : \"Brown\",\n" +
+                "    \"totalprice\" : 111,\n" +
                 "    \"depositpaid\" : true,\n" +
-                "    \"BookingDates\" : {\n" +
-                "        \"checkin\" : \"2022-01-01\",\n" +
-                "        \"checkout\" : \"2022-05-01\"\n" +
+                "    \"bookingdates\" : {\n" +
+                "        \"checkin\" : \"2018-01-01\",\n" +
+                "        \"checkout\" : \"2019-01-01\"\n" +
                 "    },\n" +
                 "    \"additionalneeds\" : \"Breakfast\"\n" +
                 "}";
