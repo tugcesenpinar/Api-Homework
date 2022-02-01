@@ -1,11 +1,9 @@
 package services;
 
-import com.google.gson.Gson;
 import io.restassured.http.ContentType;
-import models.UpdateBooking;
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
 import static io.restassured.RestAssured.given;
 
 public class UpdateBookingTest {
@@ -52,9 +50,11 @@ public class UpdateBookingTest {
                 .header("Cookie","token="+cookie)
                 .body(updateData).
                 when()
-                .put("https://restful-booker.herokuapp.com/booking/1").
+                .put("https://restful-booker.herokuapp.com/booking/26").
                 then()
-                .statusCode(200).log().all();
+                .statusCode(200)
+                .log()
+                .all();
 
     }
 }

@@ -1,12 +1,19 @@
 package services;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import models.Attachment;
+import org.apache.http.HttpStatus;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 
 public class GetBookingTest {
+    Attachment attachment = new Attachment();
 
     @BeforeTest
     public void postCreateBooking() {
@@ -34,10 +41,17 @@ public class GetBookingTest {
 
     @Test
     public void getBooking(){
-        given().
+        baseURI = "https://restful-booker.herokuapp.com";
+        RequestSpecification request = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .log().all();
+        Response response = request.
                 when()
-                .get("https://restful-booker.herokuapp.com/booking/21").
-                then()
+                .get("/booking/21");
+        String result = attachment.addAttachment(request, baseURI, response);
+        response.then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
                 .log().all();
     }
 }
