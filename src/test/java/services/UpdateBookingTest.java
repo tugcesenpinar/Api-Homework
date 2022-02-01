@@ -1,15 +1,24 @@
 package services;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import models.Attachment;
+import org.apache.http.HttpStatus;
+import org.hamcrest.core.IsEqual;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 
 public class UpdateBookingTest {
- private String cookie = "";
+    private String cookie = "";
+    Attachment attachment = new Attachment();
+
     @BeforeTest
-    public void Token(){
+    public void Token() {
         String user = "{\n" +
                 "    \"username\" : \"admin\",\n" +
                 "    \"password\" : \"password123\"\n" +
@@ -44,17 +53,22 @@ public class UpdateBookingTest {
                 "    \"additionalneeds\" : \"Breakfast\"\n" +
                 "}";
 
-        given()
-                .header("Content-Type","application/json")
-                .header("Accept","application/json")
-                .header("Cookie","token="+cookie)
+        baseURI = "https://restful-booker.herokuapp.com";
+        RequestSpecification request = RestAssured.given()
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .header("Cookie", "token=" + cookie);
+        Response response = request
                 .body(updateData).
                 when()
-                .put("https://restful-booker.herokuapp.com/booking/26").
+                .put("/booking/26");
+                String result = attachment.addAttachment(request, baseURI, response);
+        response.
                 then()
-                .statusCode(200)
-                .log()
-                .all();
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("firstname",IsEqual.equalTo("Tugcee"))
+                .log().all();
 
     }
 }
