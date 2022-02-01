@@ -2,9 +2,15 @@ package services;
 
 import com.google.gson.Gson;
 import io.restassured.http.ContentType;
+import models.BookingDates;
 import models.UpdateBooking;
+import org.apache.http.HttpStatus;
+import org.hamcrest.core.IsEqual;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
@@ -30,9 +36,13 @@ public class PartialUpdateBookingTest {
     }
 
     @Test
-    public void updateBooking() {
+    public void updateBooking()  {
 
-        UpdateBooking updateRequest = new UpdateBooking("tugce", "sena", 600, false);
+        Map<String,String> bookingdates = new HashMap<>();
+        bookingdates.put("checkin", "2022-05-01");
+        bookingdates.put("checkout", "2022-07-06");
+
+        UpdateBooking updateRequest = new UpdateBooking("tugce", "sena", 600, false,bookingdates);
         String updateData = new Gson().toJson(updateRequest);
 
         given()
@@ -41,8 +51,11 @@ public class PartialUpdateBookingTest {
                 .header("Cookie","token="+cookie)
                 .body(updateData).
                 when()
-                .patch("https://restful-booker.herokuapp.com/booking/21").
+                .post("https://restful-booker.herokuapp.com/booking/21").
                 then()
-                .statusCode(200).log().all();
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("lastname", IsEqual.equalTo(updateRequest.getLastname()))
+                .log().all();
 }
 }

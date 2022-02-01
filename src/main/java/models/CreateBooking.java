@@ -1,30 +1,45 @@
 package models;
 
 
-import sun.util.calendar.BaseCalendar;
-import sun.util.calendar.LocalGregorianCalendar;
-
-import java.sql.Date;
-
 public class CreateBooking {
 
-    public String firstname;
-    public String lastname;
-    public int totalprice;
-    public boolean depositpaid;
-    public java.util.Date checkin;
-    public Date checkout;
-    public String additionalneeds;
+    private String firstname;
+    private String lastname;
+    private int totalprice;
+    private boolean depositpaid;
+    private String additionalneeds;
+    private BookingDates bookingdates;
 
-    public CreateBooking(String firstname, String lastname, int totalprice, boolean depositpaid, Date checkin, Date checkout, String additionalneeds) {
+    public CreateBooking(String firstname, String lastname, int totalprice, boolean depositpaid, String additionalneeds, BookingDates bookingdates) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.totalprice = totalprice;
         this.depositpaid = depositpaid;
-        this.checkin = checkin;
-        this.checkout = checkout;
         this.additionalneeds = additionalneeds;
+        this.bookingdates = bookingdates;
     }
 
+    public String getFirstname() {
+        return firstname;
+    }
 
+    public String getLastname() {
+        return lastname;
+    }
+
+    public int getTotalprice() {
+        return totalprice;
+    }
+
+    public boolean isDepositpaid() {
+        return depositpaid;
+    }
+
+    public String getAdditionalneeds() {
+        return additionalneeds;
+    }
+
+    public BookingDates getBookingDates() {
+        return bookingdates;
+    }
 }

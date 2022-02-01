@@ -39,7 +39,7 @@ public class UpdateBookingTest {
                 "    \"lastname\" : \"sen\",\n" +
                 "    \"totalprice\" : 300,\n" +
                 "    \"depositpaid\" : true,\n" +
-                "    \"bookingdates\" : {\n" +
+                "    \"BookingDates\" : {\n" +
                 "        \"checkin\" : \"2022-01-01\",\n" +
                 "        \"checkout\" : \"2022-05-01\"\n" +
                 "    },\n" +

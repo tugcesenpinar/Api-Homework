@@ -1,21 +1,30 @@
 package services;
 
 import com.google.gson.Gson;
+import io.qameta.allure.model.Attachment;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import models.BookingDates;
 import models.CreateBooking;
+import org.apache.http.HttpStatus;
+import org.hamcrest.core.IsEqual;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
+import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 
 public class CreateBookingTest {
     private String cookie = "";
+    Attachment attachment = new Attachment();
+
     @BeforeTest
-    public void Token(){
+    public void Token() {
         String user = "{\n" +
                 "    \"username\" : \"admin\",\n" +
                 "    \"password\" : \"password123\"\n" +
@@ -34,37 +43,50 @@ public class CreateBookingTest {
 
 
     @Test
-    public void postCreateBooking() {
-       String createData = "{\n" +
+    public void postCreateBooking() throws ParseException {
+     /*  String createData = "{\n" +
                "    \"firstname\" : \"Tugce\",\n" +
                "    \"lastname\" : \"Senpinar\",\n" +
                "    \"totalprice\" : 300,\n" +
                "    \"depositpaid\" : true,\n" +
-               "    \"bookingdates\" : {\n" +
+               "    \"BookingDates\" : {\n" +
                "        \"checkin\" : \"2022-01-01\",\n" +
                "        \"checkout\" : \"2022-05-01\"\n" +
                "    },\n" +
                "    \"additionalneeds\" : \"Breakfast\"\n" +
-               "}";
+               "}";*/
 
-      /*  Date d1 = new SimpleDateFormat("yyyy-MM-dd").parse("2022-01-01");
+      /*  SimpleDateFormat formatter = new SimpleDateFormat(
+                "yyyy-MM-dd");
 
-       CreateBooking createRequest = new CreateBooking("tugce","senpinar",500, true, Date.valueOf("2022-01-01") ,Date.valueOf("2022-05-01"),"breakfast");
-        String createData = new Gson().toJson(createRequest); */
-        given()
-                .body(createData)
+            Date checkin = formatter.parse("2022-01-01");
+            Date checkout = formatter.parse("2022-05-01"); */
+
+        RestAssured.baseURI = "https://restful-booker.herokuapp.com";
+        BookingDates bookingdates = new BookingDates("2022-01-02","2022-05-02");
+
+        CreateBooking createRequest = new CreateBooking("tugce", "senpinar", 500, true, "breakfast",bookingdates );
+        String createData = new Gson().toJson(createRequest);
+        RequestSpecification request = RestAssured.given()
                 .contentType(ContentType.JSON)
-                .log().all().
+                .log().all();
+        Response response= request
+                .body(createData).
                 when()
-                .post("https://restful-booker.herokuapp.com/booking").
-                then()
-                .statusCode(200).log().all();
+                .post("/booking");
+        attachment.addAttachment(request, baseURI, response);
+        response.then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("lastname", IsEqual.equalTo(createRequest.getLastname()))
+                .log().all();
+
     }
 
     @AfterTest
-    public void deleteBooking(){
+    public void deleteBooking() {
         given()
-                .header("Cookie","token="+cookie).
+                .header("Cookie", "token=" + cookie).
                 when()
                 .delete("https://restful-booker.herokuapp.com/booking/21\n").
                 then()
